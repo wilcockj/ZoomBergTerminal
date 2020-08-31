@@ -14,17 +14,19 @@ add_color_picker3("colorpicker3",width=100)
 add_button("Plot data", callback="plot_callback")
 add_button("Clear plot", callback="plot_clearer")
 add_button("Plot in 3d", callback="plotter3d")
+add_button("Open logger", callback="openlogger")
 add_plot("StockPlot", "Time (day)", "Increase from Start of Week (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
 #use these variables to keep track of limits
 #make sure ot keep each stock in range
 show_documentation()
-show_logger()
 #set x limit 0-7
 #set y limit -10% over 10% over high and low
 #set_plot_x,ylimits()
 #need to look for max of whole plot 
+def openlogger(sender,data):
+    show_logger()
 def plotter3d(sender, data):
     #here call something to use the 3d plotter
     log_debug("Inside 3d plotting function")
@@ -37,6 +39,7 @@ def plotter3d(sender, data):
         for y in range(4):
             colorlist[num][y] = float(int(colorlist[num][y])/255)
     sg.stockplotter(tickers,colorlist)
+
 def color_generator():
     colors =[(102,153,255),(204, 0, 0),(204, 102, 255),(51, 204, 51),(255, 204, 153)]
     num = 0

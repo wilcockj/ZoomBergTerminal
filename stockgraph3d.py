@@ -10,7 +10,6 @@ import numpy as np
 
 fig = plt.figure()
 ax = fig.gca(projection='3d')
-
 def getstockmovement(ticker):
     #set_plot_xlimits('StockPlot',0,7)
     mystock = yf.Ticker(ticker)
@@ -33,9 +32,18 @@ def getstockslist(stocklist):
     return masterlist
 def stockplotter(tickerlist,colorlist):
     numstocks = len(tickerlist) 
+    maxy = 0
+    miny = 0
     verts = getstockslist(tickerlist)
+    for x in range(len(verts)):
+        for y in range(len(verts[0])):
+            if verts[x][y][1] > maxy:    
+                maxy = verts[x][y][1]
+            if verts[x][y][1] < miny:
+                miny = verts[x][y][1]
+
     zs = np.arange(0,numstocks,1.0)
-    poly = PolyCollection(verts, facecolors=colorlist[0:numstocks])
+    poly = PolyCollection(verts, facecolors=colorlist[0:numstocks],lw=0.5,edgecolor=(0,0,0,1))
     poly.set_alpha(0.7)
     poly.set_linestyle(ls='-')
     poly.set_linewidth(lw=2.0)
@@ -45,9 +53,8 @@ def stockplotter(tickerlist,colorlist):
     ax.set_ylabel("Stock")
     ax.set_ylim3d(-1,numstocks)#set to number of stocks
     ax.set_zlabel("Price increase since start of week(%)")
-    ax.set_zlim3d(0,10)
-    plt.show()
-    
+    ax.set_zlim3d(miny,maxy)
+    plt.show() 
 def main():
     colors = [cc('r'),cc('b'),cc('c'),cc('g'),cc('m'),cc('y'),cc('k')]
     tickerlist = ['amd','msft']
