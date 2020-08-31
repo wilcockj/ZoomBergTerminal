@@ -9,6 +9,7 @@ import yfinance as yf
 #add functionality to keep adding more stocks
 #scale graph by percent differnce from the start of the time period
 add_input_text("Stock Ticker", default_value="msft")
+add_color_picker3("colorpicker3",width=100)
 add_button("Plot data", callback="plot_callback")
 add_plot("StockPlot", "Time (day)", "Increase from Start of Week (%)", height=-1)
 add_data("maxy", 0)
@@ -36,40 +37,35 @@ gen = color_generator()
 def plot_callback(sender, data):
     #try except for if the ticker is correct
     #clear_plot("StockPlot")
-    print(get_plot_query_area('StockPlot'))
     set_plot_xlimits('StockPlot',0,7)
     mystock = yf.Ticker(get_value('Stock Ticker'))
     stockmovement = mystock.history('7d',interval = '1m')
-    print(stockmovement)
-    pastweek = stockmovement['Close']
-    firstprice = pastweek[0]
-    set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
-    if get_value("maxy") < (pastweek.max()-firstprice)*100/firstprice:
-        set_value("maxy",(pastweek.max()-firstprice)*100/firstprice)
-    if get_value("miny") > (pastweek.min()-firstprice)*100/firstprice:
-        set_value("miny",(pastweek.min()-firstprice)*100/firstprice)
-    print((pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
-    weeklist = []
-    #make the price percent change from start
-    for i in range(len(pastweek)):
-        weeklist.append((i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice))
-    #print(weeklist)
-    ''' 
-    data1 = []
-    for i in range(0, 100):
-        data1.append([3.14 * i / 180, cos(3 * 3.14 * i / 180)])
-
-    data2 = []
-    for i in range(0, 100):
-        data2.append([3.14 * i / 180, sin(2 * 3.14 * i / 180)])
-    print(data2) 
-    '''
-    #use generator instead
-    #iterate through list of colors
-    newcolor = next(gen)
-    print(newcolor)
-    add_line_series("StockPlot", get_value('Stock Ticker'), weeklist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
+    print(get_value("colorpicker3"))
+    if stockmovement.empty:
+        print("bad ticker")
+    else:
+        print(stockmovement)
+        pastweek = stockmovement['Close']
+        firstprice = pastweek[0]
+        set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
+        if maxy[0] < (pastweek.max()-firstprice)*100/firstprice:
+            maxy[0] = (pastweek.max()-firstprice)*100/firstprice
+        if miny[0] > (pastweek.min()-firstprice)*100/firstprice:
+            miny[0] = (pastweek.min()-firstprice)*100/firstprice
+        #set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
+        set_plot_ylimits('StockPlot',miny[0],maxy[0])   
+        print((pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
+        weeklist = []
+        #make the price percent change from start
+        for i in range(len(pastweek)):
+            weeklist.append((i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice))
+        newcolor = next(gen)
+        print(newcolor)
+        add_line_series("StockPlot", get_value('Stock Ticker'), weeklist, weight=2, fill=[get_value("colorpicker3"), 100])
     #add_scatter_series("Plot", "test", weeklist)
 
 
+
+maxy = [0]
+miny = [0]
 start_dearpygui()
