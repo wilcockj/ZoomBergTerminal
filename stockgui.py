@@ -11,6 +11,7 @@ import yfinance as yf
 add_input_text("Stock Ticker", default_value="msft")
 add_color_picker3("colorpicker3",width=100)
 add_button("Plot data", callback="plot_callback")
+add_button("Clear plot", callback="plot_clearer")
 add_plot("StockPlot", "Time (day)", "Increase from Start of Week (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
@@ -33,17 +34,22 @@ def color_generator():
             log_debug("relooping")
             num = 0
 gen = color_generator()
-
+def plot_clearer(sender, data):
+    tickerlist.clear()
+    clear_plot("StockPlot")
 def plot_callback(sender, data):
+    print(tickerlist)
     #try except for if the ticker is correct
     #clear_plot("StockPlot")
     set_plot_xlimits('StockPlot',0,7)
-    mystock = yf.Ticker(get_value('Stock Ticker'))
+    ticker = get_value('Stock Ticker')
+    mystock = yf.Ticker(ticker)
     stockmovement = mystock.history('7d',interval = '1m')
     print(get_value("colorpicker3"))
     if stockmovement.empty:
         print("bad ticker")
     else:
+        tickerlist.append(ticker)
         print(stockmovement)
         pastweek = stockmovement['Close']
         firstprice = pastweek[0]
@@ -59,13 +65,13 @@ def plot_callback(sender, data):
         #make the price percent change from start
         for i in range(len(pastweek)):
             weeklist.append((i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice))
-        newcolor = next(gen)
+        newcolor = get_value("colorpicker3")
         print(newcolor)
-        add_line_series("StockPlot", get_value('Stock Ticker'), weeklist, weight=2, fill=[get_value("colorpicker3"), 100])
+        add_line_series("StockPlot", ticker.upper(), weeklist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
     #add_scatter_series("Plot", "test", weeklist)
 
 
-
+tickerlist = []
 maxy = [0]
 miny = [0]
 start_dearpygui()
