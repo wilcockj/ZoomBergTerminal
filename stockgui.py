@@ -10,21 +10,24 @@ import stockgraph3d as sg
 #add functionality to keep adding more stocks
 #scale graph by percent differnce from the start of the time period
 add_input_text("Stock Ticker", default_value="msft")
-add_color_picker3("colorpicker3",width=100)
-add_button("Plot data", callback="plot_callback")
+add_color_picker3("Choose Color Of Stock",width=100)
+add_button("Plot 7d stock history", callback="plot_callback")
 add_button("Clear plot", callback="plot_clearer")
 add_button("Plot in 3d", callback="plotter3d")
 add_button("Open logger", callback="openlogger")
+add_same_line()
+add_button("Open dearpygui documentation", callback="opendocs")
 add_plot("StockPlot", "Time (day)", "Increase from Start of Week (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
 #use these variables to keep track of limits
 #make sure ot keep each stock in range
-show_documentation()
 #set x limit 0-7
 #set y limit -10% over 10% over high and low
 #set_plot_x,ylimits()
 #need to look for max of whole plot 
+def opendocs(sender,data):
+    show_documentation()
 def openlogger(sender,data):
     show_logger()
 def plotter3d(sender, data):
@@ -66,7 +69,7 @@ def plot_callback(sender, data):
     if stockmovement.empty:
         print("bad ticker")
     else:
-        newcolor = get_value("colorpicker3")
+        newcolor = get_value("Choose Color Of Stock")
         tickerlist[ticker] = newcolor
         pastweek = stockmovement['Close']
         firstprice = pastweek[0]
