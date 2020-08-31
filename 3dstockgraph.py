@@ -19,28 +19,34 @@ def getstockmovement(ticker):
     firstprice = pastweek[0]
     stockdata = []
     for i in range(len(pastweek)):
-        stockdata.append((i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice))
+        stockdata.append([i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice])
     return stockdata
 def cc(arg):
+    print(f"cc called {arg}")
     return mcolors.to_rgba(arg, alpha=0.6)
 def main():
-    zs = [0.0,1.0]
+    numstocks = 2
+    zs = np.arange(0,numstocks,1.0)
+    #print(zs)
     msftdata = getstockmovement('msft')
     amddata = getstockmovement('amd')
+    masterlist = [] 
+    #amddata[-1][-1] = 0
+    #msftdata[-1][-1] = 0
+    #print(amddata)
     verts = []
-    print(msftdata[-1])
-    #msftdata[0][0],msftdata[-1][0],amddata[0][0],amddata[-1][0] = 0
+    #print(msftdata[0])
     verts.append(msftdata)
     verts.append(amddata)
-    poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
-                                         cc('y')])
-
+    #print(verts)   
+    poly = PolyCollection(verts, facecolors=[cc('r'), cc('g')])
+    #poly.set_color
     poly.set_alpha(0.7)
     ax.add_collection3d(poly,zs=zs, zdir='y')
     ax.set_xlabel("Time (days)")
     ax.set_xlim3d(0,7)
     ax.set_ylabel("Stock")
-    ax.set_ylim3d(-1,4)#set to number of stocks
+    ax.set_ylim3d(-1,numstocks)#set to number of stocks
     ax.set_zlabel("Price increase since start of week(%)")
     ax.set_zlim3d(0,10)
     plt.show()

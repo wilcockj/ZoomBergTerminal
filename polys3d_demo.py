@@ -32,6 +32,7 @@ for z in zs:
     ys = np.random.rand(len(xs))
     #print(ys)
     ys[0], ys[-1] = 0, 0
+    #print(list(zip(xs,ys)))
     verts.append(list(zip(xs, ys)))
 #each stock can go into a verts like data structure
 print(verts)

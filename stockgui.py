@@ -1,8 +1,6 @@
 from dearpygui.dearpygui import *
 from math import cos, sin
 import yfinance as yf
-maxy = 0
-miny = 0
 #idea same process but matlab 3d graph to compare stocks would look really cool
 #x is time
 #z is price/percent change
@@ -13,6 +11,8 @@ miny = 0
 add_input_text("Stock Ticker", default_value="msft")
 add_button("Plot data", callback="plot_callback")
 add_plot("StockPlot", "Time (day)", "Increase from Start of Week (%)", height=-1)
+add_data("maxy", 0)
+add_data("miny", 0)
 #use these variables to keep track of limits
 #make sure ot keep each stock in range
 show_documentation()
@@ -32,6 +32,7 @@ def color_generator():
             log_debug("relooping")
             num = 0
 gen = color_generator()
+
 def plot_callback(sender, data):
     #try except for if the ticker is correct
     #clear_plot("StockPlot")
@@ -43,6 +44,10 @@ def plot_callback(sender, data):
     pastweek = stockmovement['Close']
     firstprice = pastweek[0]
     set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
+    if get_value("maxy") < (pastweek.max()-firstprice)*100/firstprice:
+        set_value("maxy",(pastweek.max()-firstprice)*100/firstprice)
+    if get_value("miny") > (pastweek.min()-firstprice)*100/firstprice:
+        set_value("miny",(pastweek.min()-firstprice)*100/firstprice)
     print((pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
     weeklist = []
     #make the price percent change from start
