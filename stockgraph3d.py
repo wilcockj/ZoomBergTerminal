@@ -35,21 +35,10 @@ def stockplotter(tickerlist,colorlist):
     numstocks = len(tickerlist) 
     verts = getstockslist(tickerlist)
     zs = np.arange(0,numstocks,1.0)
-    #print(zs)
-    '''
-    msftdata = getstockmovement('msft')
-    amddata = getstockmovement('amd')
-    masterlist = [] 
-    amddata[-1][-1] = 0
-    msftdata[-1][-1] = 0
-    #print(amddata)
-    verts = []
-    #print(msftdata[0])
-    verts.append(amddata)
-    verts.append(msftdata)
-    '''
     poly = PolyCollection(verts, facecolors=colorlist[0:numstocks])
     poly.set_alpha(0.7)
+    poly.set_linestyle(ls='-')
+    poly.set_linewidth(lw=2.0)
     ax.add_collection3d(poly,zs=zs, zdir='y')
     ax.set_xlabel("Time (days)")
     ax.set_xlim3d(0,7)
@@ -58,7 +47,7 @@ def stockplotter(tickerlist,colorlist):
     ax.set_zlabel("Price increase since start of week(%)")
     ax.set_zlim3d(0,10)
     plt.show()
-
+    
 def main():
     colors = [cc('r'),cc('b'),cc('c'),cc('g'),cc('m'),cc('y'),cc('k')]
     tickerlist = ['amd','msft']
