@@ -4,4 +4,5 @@ Small project to make a cool looking Stock Terminal using 3d graphics and whatev
 ![](zoombergterminal.png)
 
 Video of the ZoomBergTerminal
+
 https://www.youtube.com/watch?v=lZennoZjr4U
