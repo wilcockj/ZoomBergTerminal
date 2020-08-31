@@ -8,8 +8,8 @@ import numpy as np
 #then using https://stackoverflow.com/questions/43217827/how-can-i-fill-an-area-below-a-3d-graph-in-matlab 
 #like method we can fill in the graph
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
+#fig = plt.figure()
+fig = plt.gca(projection='3d')
 def getstockmovement(ticker):
     #set_plot_xlimits('StockPlot',0,7)
     mystock = yf.Ticker(ticker)
@@ -36,7 +36,7 @@ def stockplotter(tickerlist,colorlist):
     miny = 0
     verts = getstockslist(tickerlist)
     for x in range(len(verts)):
-        for y in range(len(verts[0])):
+        for y in range(len(verts[x])):
             if verts[x][y][1] > maxy:    
                 maxy = verts[x][y][1]
             if verts[x][y][1] < miny:
@@ -47,14 +47,15 @@ def stockplotter(tickerlist,colorlist):
     poly.set_alpha(0.7)
     poly.set_linestyle(ls='-')
     poly.set_linewidth(lw=2.0)
-    ax.add_collection3d(poly,zs=zs, zdir='y')
-    ax.set_xlabel("Time (days)")
-    ax.set_xlim3d(0,7)
-    ax.set_ylabel("Stock")
-    ax.set_ylim3d(-1,numstocks)#set to number of stocks
-    ax.set_zlabel("Price increase since start of week(%)")
-    ax.set_zlim3d(miny,maxy)
-    plt.show() 
+    fig.add_collection3d(poly,zs=zs, zdir='y')
+    fig.set_xlabel("Time (days)")
+    fig.set_xlim3d(0,7)
+    fig.set_ylabel("Stock")
+    fig.set_ylim3d(0,numstocks)#set to number of stocks
+    fig.set_zlabel("Price increase since start of week(%)")
+    fig.set_zlim3d(miny,maxy)
+    plt.show()
+    plt.close('all')
 def main():
     colors = [cc('r'),cc('b'),cc('c'),cc('g'),cc('m'),cc('y'),cc('k')]
     tickerlist = ['amd','msft']
