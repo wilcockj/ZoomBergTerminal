@@ -9,6 +9,7 @@ import stockgraph3d as sg
 #add a textbox to search a stock ticker and generate a graph of price
 #add functionality to keep adding more stocks
 #scale graph by percent differnce from the start of the time period
+set_main_window_title("ZoomBerg Terminal")
 add_input_text("Stock Ticker", default_value="msft")
 add_color_picker3("Choose Color Of Stock",width=100)
 add_button("Plot 7d stock history", callback="plot_callback")
