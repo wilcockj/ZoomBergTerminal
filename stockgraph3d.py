@@ -3,6 +3,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.collections import PolyCollection
 import matplotlib.pyplot as plt
 from matplotlib import colors as mcolors
+import matplotlib.patches as mpatches
 import numpy as np
 #using plot3 we can plot multiple lines in a 3d space
 #then using https://stackoverflow.com/questions/43217827/how-can-i-fill-an-area-below-a-3d-graph-in-matlab 
@@ -41,7 +42,10 @@ def stockplotter(tickerlist,colorlist):
                 maxy = verts[x][y][1]
             if verts[x][y][1] < miny:
                 miny = verts[x][y][1]
-
+    customlegend = []
+    for x in range(numstocks):
+        customlegend.append(mpatches.Patch(color=colorlist[x],label=tickerlist[x].upper()))
+    fig.legend(handles=customlegend)
     zs = np.arange(0,numstocks,1.0)
     poly = PolyCollection(verts, facecolors=colorlist[0:numstocks],lw=0.5,edgecolor=(0,0,0,1))
     poly.set_alpha(0.7)
