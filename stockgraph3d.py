@@ -9,7 +9,6 @@ import numpy as np
 #like method we can fill in the graph
 
 #fig = plt.figure()
-fig = plt.gca(projection='3d')
 def getstockmovement(ticker):
     #set_plot_xlimits('StockPlot',0,7)
     mystock = yf.Ticker(ticker)
@@ -31,6 +30,7 @@ def getstockslist(stocklist):
         masterlist[x][-1][-1] = 0
     return masterlist
 def stockplotter(tickerlist,colorlist):
+    fig = plt.gca(projection='3d')
     numstocks = len(tickerlist) 
     maxy = 0
     miny = 0

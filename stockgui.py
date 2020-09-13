@@ -36,25 +36,11 @@ def plotter3d(sender, data):
     log_debug("Inside 3d plotting function")
     colorlist = []
     tickers = []
+    log_debug(tickerlist)
     for x,y in tickerlist.items():
         tickers.append(str(x))
         colorlist.append(y)
-    for num,x in enumerate(colorlist):
-        for y in range(4):
-            colorlist[num][y] = float(int(colorlist[num][y])/255)
     sg.stockplotter(tickers,colorlist)
-
-def color_generator():
-    colors =[(102,153,255),(204, 0, 0),(204, 102, 255),(51, 204, 51),(255, 204, 153)]
-    num = 0
-    while True:
-        yield colors[num]
-        num += 1
-        log_debug(num)
-        if(num > len(colors)-1):
-            log_debug("relooping")
-            num = 0
-gen = color_generator()
 def plot_clearer(sender, data):
     tickerlist.clear()
     clear_plot("StockPlot")
@@ -66,12 +52,14 @@ def plot_callback(sender, data):
     ticker = get_value('Stock Ticker')
     mystock = yf.Ticker(ticker)
     stockmovement = mystock.history('7d',interval = '1m')
-    #print(get_value("colorpicker3"))
     if stockmovement.empty:
         print("bad ticker")
     else:
         newcolor = get_value("Choose Color Of Stock")
-        tickerlist[ticker] = newcolor
+        fixedcolor = []
+        for y in range(4):
+            fixedcolor.append(float(int(newcolor[y])/255))
+        tickerlist[ticker] = fixedcolor
         pastweek = stockmovement['Close']
         firstprice = pastweek[0]
         set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
