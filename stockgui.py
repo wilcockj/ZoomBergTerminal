@@ -2,6 +2,8 @@ from dearpygui.dearpygui import *
 from math import cos, sin
 import yfinance as yf
 import stockgraph3d as sg
+#TODO
+#add detector for changing of the interval option that regraphs the stocks
 #idea same process but matlab 3d graph to compare stocks would look really cool
 #x is time
 #z is price/percent change
@@ -19,7 +21,7 @@ add_combo("Select Plotting Interval",['7d','1mo','1y'],width = 100, default_valu
 add_button("Open logger", callback="openlogger")
 add_same_line()
 add_button("Open dearpygui documentation", callback="opendocs")
-add_plot("StockPlot", "Time Interval", "Increase from Start of Week (%)", height=-1)
+add_plot("StockPlot", "Time Interval", "Increase from Start of Time Interval (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
 #use these variables to keep track of limits
