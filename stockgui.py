@@ -55,10 +55,13 @@ def plot_callback(sender, data):
     mystock = yf.Ticker(ticker)
     stockmovement = mystock.history('7d',interval = '1m')
     if stockmovement.empty:
-        add_popup("Plot 7d stock history","Ticker Error", modal=True)
-        add_text("Invalid Ticker")
-        add_button("Ok", callback="close_window")
-        end_popup()
+        if does_item_exist("Ticker Error"):
+            show_item("Ticker Error")
+        else:    
+            add_popup("Plot 7d stock history","Ticker Error", modal=True)
+            add_text("Invalid Ticker")
+            add_button("Ok", callback="close_window")
+            end_popup()
     else:
         newcolor = get_value("Choose Color Of Stock")
         fixedcolor = []
