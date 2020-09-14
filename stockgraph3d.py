@@ -48,7 +48,7 @@ def stockplotter(tickerlist,colorlist):
     fig.legend(handles=customlegend)
     zs = np.arange(0,numstocks,1.0)
     poly = PolyCollection(verts, facecolors=colorlist[0:numstocks],lw=0.5,edgecolor=(0,0,0,1))
-    poly.set_alpha(0.7)
+    poly.set_alpha(0.5)
     poly.set_linestyle(ls='-')
     poly.set_linewidth(lw=2.0)
     fig.add_collection3d(poly,zs=zs, zdir='y')

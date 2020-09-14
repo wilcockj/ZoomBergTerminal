@@ -44,6 +44,8 @@ def plotter3d(sender, data):
 def plot_clearer(sender, data):
     tickerlist.clear()
     clear_plot("StockPlot")
+def close_window(sender,data):
+    close_popup()
 def plot_callback(sender, data):
     #print(tickerlist)
     #try except for if the ticker is correct
@@ -53,7 +55,10 @@ def plot_callback(sender, data):
     mystock = yf.Ticker(ticker)
     stockmovement = mystock.history('7d',interval = '1m')
     if stockmovement.empty:
-        print("bad ticker")
+        add_popup("Plot 7d stock history","Ticker Error", modal=True)
+        add_text("Invalid Ticker")
+        add_button("Ok", callback="close_window")
+        end_popup()
     else:
         newcolor = get_value("Choose Color Of Stock")
         fixedcolor = []
