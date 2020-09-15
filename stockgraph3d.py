@@ -59,15 +59,21 @@ def stockplotter(tickerlist,colorlist,intervalsel):
     poly.set_linestyle(ls='-')
     poly.set_linewidth(lw=2.0)
     fig.add_collection3d(poly,zs=zs, zdir='y')
-    fig.set_xlabel("Time interval")
     if intervalsel == '7d':
         fig.set_xlim3d(0,7)
+        fig.set_xlabel("Time (day)")
+        fig.set_zlabel("Price increase since start of week(%)")
     else:
         fig.set_xlim3d(0,len(verts[0]))
+        if intervalsel == '1mo':
+            fig.set_xlabel("Time (hr)")
+            fig.set_zlabel("Price increase in last month(%)")
+        if intervalsel == '1y':
+            fig.set_xlabel("Time (day)")
+            fig.set_zlabel("Price increase in last year(%)")
     #to change when understand 
     fig.set_ylabel("Stock")
     fig.set_ylim3d(0,numstocks)#set to number of stocks
-    fig.set_zlabel("Price increase since start of week(%)")
     fig.set_zlim3d(miny,maxy)
     plt.show()
     plt.close('all')

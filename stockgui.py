@@ -80,14 +80,13 @@ def plot_callback(sender, data):
         for y in range(4):
             fixedcolor.append(float(int(newcolor[y])/255))
         tickerlist[ticker] = fixedcolor
-        print(stockmovement)
         pastweek = stockmovement['Close']
         firstprice = pastweek[0]
         log_debug(f"the length of the plotting is {len(pastweek)}")
         if intervalsel == '7d':
             set_plot_xlimits('StockPlot',0,7)
         else:
-            set_plot_xlimits('StockPlot',0,len(pastweek))
+            set_plot_xlimits('StockPlot',0,len(pastweek)-1)
         set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
         if maxy[0] < (pastweek.max()-firstprice)*100/firstprice:
             maxy[0] = (pastweek.max()-firstprice)*100/firstprice
