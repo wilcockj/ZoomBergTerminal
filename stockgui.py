@@ -44,7 +44,9 @@ def plotter3d(sender, data):
     for x,y in tickerlist.items():
         tickers.append(str(x))
         colorlist.append(y)
-    sg.stockplotter(tickers,colorlist,intervalsel)
+    log_debug(tickers)
+    if tickers:
+        sg.stockplotter(tickers,colorlist,intervalsel)
 def plot_clearer(sender, data):
     tickerlist.clear()
     clear_plot("StockPlot")
