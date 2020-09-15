@@ -3,7 +3,6 @@ from math import cos, sin
 import yfinance as yf
 import stockgraph3d as sg
 #TODO
-#add detector for changing of the interval option that regraphs the stocks
 #idea same process but matlab 3d graph to compare stocks would look really cool
 #x is time
 #z is price/percent change
@@ -25,12 +24,6 @@ add_button("Open dearpygui documentation", callback="opendocs")
 add_plot("StockPlot", "Time Interval", f"Increase from Start of Time Interval (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
-#use these variables to keep track of limits
-#make sure ot keep each stock in range
-#set x limit 0-7
-#set y limit -10% over 10% over high and low
-#set_plot_x,ylimits()
-#need to look for max of whole plot 
 #possibly change to regraph all current tickers for the new interval
 def changedinterval(sender,data):
     tickerlist.clear()
@@ -42,7 +35,6 @@ def opendocs(sender,data):
 def openlogger(sender,data):
     show_logger()
 def plotter3d(sender, data):
-    #here call something to use the 3d plotter
     log_debug("Inside 3d plotting function")
     colorlist = []
     tickers = []
@@ -62,9 +54,6 @@ def plot_clearer(sender, data):
 def close_window(sender,data):
     close_popup()
 def plot_callback(sender, data):
-    #print(tickerlist)
-    #try except for if the ticker is correct
-    #clear_plot("StockPlot")
     ticker = get_value('Stock Ticker')
     mystock = yf.Ticker(ticker)
     intervalsel = get_value("Select Plotting Interval")
@@ -89,30 +78,30 @@ def plot_callback(sender, data):
         for y in range(4):
             fixedcolor.append(float(int(newcolor[y])/255))
         tickerlist[ticker] = fixedcolor
-        pastweek = stockmovement['Close']
-        firstprice = pastweek[0]
-        log_debug(f"the length of the plotting is {len(pastweek)}")
+        intervaldata = stockmovement['Close']
+        firstprice = intervaldata[0]
+        log_debug(f"the length of the plotting is {len(intervaldata)}")
         if intervalsel == '7d':
             set_plot_xlimits('StockPlot',0,7)
         else:
-            set_plot_xlimits('StockPlot',0,len(pastweek)-1)
-        set_plot_ylimits('StockPlot',(pastweek.min()-firstprice)*100/firstprice,(pastweek.max()-firstprice)*100/firstprice)
-        if maxy[0] < (pastweek.max()-firstprice)*100/firstprice:
-            maxy[0] = (pastweek.max()-firstprice)*100/firstprice
-        if miny[0] > (pastweek.min()-firstprice)*100/firstprice:
-            miny[0] = (pastweek.min()-firstprice)*100/firstprice
+            set_plot_xlimits('StockPlot',0,len(intervaldata)-1)
+        set_plot_ylimits('StockPlot',(intervaldata.min()-firstprice)*100/firstprice,(intervaldata.max()-firstprice)*100/firstprice)
+        if maxy[0] < (intervaldata.max()-firstprice)*100/firstprice:
+            maxy[0] = (intervaldata.max()-firstprice)*100/firstprice
+        if miny[0] > (intervaldata.min()-firstprice)*100/firstprice:
+            miny[0] = (intervaldata.min()-firstprice)*100/firstprice
         log_debug(f"{miny[0],maxy[0]}")
         set_plot_ylimits('StockPlot',miny[0],maxy[0])   
-        weeklist = []
-        #make the price percent change from start
+        datalist = []
+        #graph percent change from start
         if intervalsel == '7d':
-            for i in range(len(pastweek)):
-                weeklist.append((i/(2709)*7,(pastweek[i]-firstprice)*100/firstprice))
+            for i in range(len(intervaldata)):
+                datalist.append((i/(2709)*7,(intervaldata[i]-firstprice)*100/firstprice))
         else:
-            for i in range(len(pastweek)):
-                weeklist.append((i,(pastweek[i]-firstprice)*100/firstprice))
-        add_line_series("StockPlot", ticker.upper(), weeklist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
-    #add_scatter_series("Plot", "test", weeklist)
+            for i in range(len(intervaldata)):
+                datalist.append((i,(intervaldata[i]-firstprice)*100/firstprice))
+        add_line_series("StockPlot", ticker.upper(), datalist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
+    #add_scatter_series("Plot", "test", datalist)
 
 
 tickerlist = {}
