@@ -11,17 +11,18 @@ import stockgraph3d as sg
 #add a textbox to search a stock ticker and generate a graph of price
 #add functionality to keep adding more stocks
 #scale graph by percent differnce from the start of the time period
+set_theme("Dark Grey")
 set_main_window_title("ZoomBerg Terminal")
 add_input_text("Stock Ticker", default_value="msft",width = 100)
 add_color_picker3("Choose Color Of Stock",width=100)
 add_button("Plot stock history", callback="plot_callback")
 add_button("Clear plot", callback="plot_clearer")
 add_button("Plot in 3d", callback="plotter3d")
-add_combo("Select Plotting Interval",['7d','1mo','1y'],width = 100, default_value = '7d')
+add_combo("Select Plotting Interval",['7d','1mo','1y'],width = 100, default_value = '7d', callback = "changedinterval")
 add_button("Open logger", callback="openlogger")
 add_same_line()
 add_button("Open dearpygui documentation", callback="opendocs")
-add_plot("StockPlot", "Time Interval", "Increase from Start of Time Interval (%)", height=-1)
+add_plot("StockPlot", "Time Interval", f"Increase from Start of Time Interval (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
 #use these variables to keep track of limits
@@ -30,6 +31,12 @@ add_data("miny", 0)
 #set y limit -10% over 10% over high and low
 #set_plot_x,ylimits()
 #need to look for max of whole plot 
+#possibly change to regraph all current tickers for the new interval
+def changedinterval(sender,data):
+    tickerlist.clear()
+    clear_plot("StockPlot")
+    maxy[0] = 0
+    miny[0] = 0
 def opendocs(sender,data):
     show_documentation()
 def openlogger(sender,data):
