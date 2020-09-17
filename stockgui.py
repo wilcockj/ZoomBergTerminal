@@ -12,7 +12,8 @@ import stockgraph3d as sg
 #scale graph by percent differnce from the start of the time period
 set_theme("Dark Grey")
 set_main_window_title("ZoomBerg Terminal")
-add_input_text("Stock Ticker", default_value="msft",width = 100)
+add_input_text("Input Stock Ticker", default_value="msft",width = 100)
+add_spacing(count=4)
 add_color_picker3("Choose Color Of Stock",width=100)
 add_button("Plot stock history", callback="plot_callback")
 add_button("Clear plot", callback="plot_clearer")
@@ -54,7 +55,7 @@ def plot_clearer(sender, data):
 def close_window(sender,data):
     close_popup()
 def plot_callback(sender, data):
-    ticker = get_value('Stock Ticker')
+    ticker = get_value('Input Stock Ticker')
     mystock = yf.Ticker(ticker)
     intervalsel = get_value("Select Plotting Interval")
     log_debug(f"{intervalsel}")
