@@ -3,6 +3,11 @@ from math import cos, sin
 import yfinance as yf
 import stockgraph3d as sg
 #TODO
+#stop ability to replot a stock, looks confusing
+#figure out how the plotting is being done and if ticker in tickerlist dont plot
+#easy to stop replotting but removes ability to change color of stock which is a nice feature,
+#if that is removed should make a new dialouge where user can change color of a certain stock
+#improve gui look make some things on the same line to not leave as much blank space on the right
 #x is time
 #z is price/percent change
 #y is which number of stock
@@ -41,7 +46,6 @@ def plotter3d(sender, data):
     log_debug("Inside 3d plotting function")
     colorlist = []
     tickers = []
-    log_debug(tickerlist)
     intervalsel = get_value("Select Plotting Interval")
     for x,y in tickerlist.items():
         tickers.append(str(x))
@@ -88,6 +92,7 @@ def plotfunc(ticker,color):
     else:
         if color == 0:
             newcolor = get_value("Choose Color Of Stock")
+            log_debug(f"chosen color {newcolor}")
             fixedcolor = []
             for y in range(4):
                 fixedcolor.append(float(int(newcolor[y])/255))
@@ -95,6 +100,8 @@ def plotfunc(ticker,color):
         else:
             fixedcolor = color
             newcolor = (color[0]*255,color[1]*255,color[2]*255,color[3]*255)
+            log_debug(f"before: {color}")
+            log_debug(f"after: {newcolor}")
         intervaldata = stockmovement['Close']
         firstprice = intervaldata[0]
         log_debug(f"the length of the plotting is {len(intervaldata)}")
