@@ -57,7 +57,8 @@ def plot_clearer(sender, data):
     miny[0] = 0
 
 def close_window(sender,data):
-    close_popup()
+    hide_item("Ticker Error")
+    set_theme("Dark Grey")
 
 def plot_callback(sender, data):
     ticker = get_value('Input Stock Ticker')
@@ -75,12 +76,15 @@ def plotfunc(ticker,color):
         stockmovement = mystock.history('1y')
     if stockmovement.empty:
         if does_item_exist("Ticker Error"):
+            set_theme("Red")
             show_item("Ticker Error")
         else:    
-            add_popup("Plot stock history","Ticker Error", modal=True)
+            #add_popup("Plot stock history","Ticker Error", modal=True)
+            add_window("Ticker Error",width = 200, height = 90)
+            set_theme("Red")
             add_text("Invalid Ticker")
             add_button("Ok", callback="close_window")
-            end_popup()
+            end_window()
     else:
         if color == 0:
             newcolor = get_value("Choose Color Of Stock")
