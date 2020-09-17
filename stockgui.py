@@ -8,6 +8,8 @@ import stockgraph3d as sg
 #easy to stop replotting but removes ability to change color of stock which is a nice feature,
 #if that is removed should make a new dialouge where user can change color of a certain stock
 #improve gui look make some things on the same line to not leave as much blank space on the right
+#try using pyautogui to plot a large number of stocks to test the limits
+#use a random generator to make a random hex color to plot and then just keep typing and plotting a large list 
 #x is time
 #z is price/percent change
 #y is which number of stock
