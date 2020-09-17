@@ -109,7 +109,6 @@ def plotfunc(ticker,color):
             for i in range(len(intervaldata)):
                 datalist.append((i,(intervaldata[i]-firstprice)*100/firstprice))
         add_line_series("StockPlot", ticker.upper(), datalist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
-    #add_scatter_series("Plot", "test", datalist)
 
 tickerlist = {}
 maxy = [0]
