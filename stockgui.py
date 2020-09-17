@@ -35,6 +35,8 @@ def changedinterval(sender,data):
     clear_plot("StockPlot")
     maxy[0] = 0
     miny[0] = 0
+    plotallinlist()
+def plotallinlist():    
     for item in tickerlist.items():
         plotfunc(item[0],item[1])
 
@@ -91,7 +93,7 @@ def plotfunc(ticker,color):
             add_text("Invalid Ticker")
             add_button("Ok", callback="close_window")
             end_window()
-    else:
+    elif color != 0 or ticker not in tickerlist:
         if color == 0:
             newcolor = get_value("Choose Color Of Stock")
             log_debug(f"chosen color {newcolor}")
@@ -127,7 +129,14 @@ def plotfunc(ticker,color):
             for i in range(len(intervaldata)):
                 datalist.append((i,(intervaldata[i]-firstprice)*100/firstprice))
         add_line_series("StockPlot", ticker.upper(), datalist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
-
+    else:
+        #if you are replotting a stock. perhaps check its color if different from that in the tickerlist
+        #if it is different replace the color with the new color and then clear and replot the graph
+        mycolor = [x/255 for x in get_value("Choose Color Of Stock")]
+        if tickerlist[ticker] != mycolor:
+            clear_plot("StockPlot")
+            tickerlist[ticker] = mycolor
+            plotallinlist()
 tickerlist = {}
 maxy = [0]
 miny = [0]
