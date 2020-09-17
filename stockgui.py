@@ -27,10 +27,11 @@ add_data("maxy", 0)
 add_data("miny", 0)
 #possibly change to regraph all current tickers for the new interval
 def changedinterval(sender,data):
-    tickerlist.clear()
     clear_plot("StockPlot")
     maxy[0] = 0
     miny[0] = 0
+    for item in tickerlist.items():
+        plotfunc(item[0],item[1])
 def opendocs(sender,data):
     show_documentation()
 def openlogger(sender,data):
@@ -56,6 +57,8 @@ def close_window(sender,data):
     close_popup()
 def plot_callback(sender, data):
     ticker = get_value('Input Stock Ticker')
+    plotfunc(ticker,0)
+def plotfunc(ticker,color):
     mystock = yf.Ticker(ticker)
     intervalsel = get_value("Select Plotting Interval")
     log_debug(f"{intervalsel}")
@@ -74,11 +77,15 @@ def plot_callback(sender, data):
             add_button("Ok", callback="close_window")
             end_popup()
     else:
-        newcolor = get_value("Choose Color Of Stock")
-        fixedcolor = []
-        for y in range(4):
-            fixedcolor.append(float(int(newcolor[y])/255))
-        tickerlist[ticker] = fixedcolor
+        if color == 0:
+            newcolor = get_value("Choose Color Of Stock")
+            fixedcolor = []
+            for y in range(4):
+                fixedcolor.append(float(int(newcolor[y])/255))
+            tickerlist[ticker] = fixedcolor
+        else:
+            fixedcolor = color
+            newcolor = (color[0]*255,color[1]*255,color[2]*255,color[3]*255)
         intervaldata = stockmovement['Close']
         firstprice = intervaldata[0]
         log_debug(f"the length of the plotting is {len(intervaldata)}")
@@ -103,7 +110,6 @@ def plot_callback(sender, data):
                 datalist.append((i,(intervaldata[i]-firstprice)*100/firstprice))
         add_line_series("StockPlot", ticker.upper(), datalist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
     #add_scatter_series("Plot", "test", datalist)
-
 
 tickerlist = {}
 maxy = [0]
