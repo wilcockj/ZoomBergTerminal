@@ -3,13 +3,10 @@ from math import cos, sin
 import yfinance as yf
 import stockgraph3d as sg
 #TODO
-#idea same process but matlab 3d graph to compare stocks would look really cool
 #x is time
 #z is price/percent change
 #y is which number of stock
 #add a textbox to search a stock ticker and generate a graph of price
-#add functionality to keep adding more stocks
-#scale graph by percent differnce from the start of the time period
 set_theme("Dark Grey")
 set_main_window_title("ZoomBerg Terminal")
 add_input_text("Input Stock Ticker", default_value="msft",width = 100)
@@ -25,6 +22,7 @@ add_button("Open dearpygui documentation", callback="opendocs")
 add_plot("StockPlot", "Time Interval", f"Increase from Start of Time Interval (%)", height=-1)
 add_data("maxy", 0)
 add_data("miny", 0)
+
 #possibly change to regraph all current tickers for the new interval
 def changedinterval(sender,data):
     clear_plot("StockPlot")
@@ -32,10 +30,13 @@ def changedinterval(sender,data):
     miny[0] = 0
     for item in tickerlist.items():
         plotfunc(item[0],item[1])
+
 def opendocs(sender,data):
     show_documentation()
+
 def openlogger(sender,data):
     show_logger()
+
 def plotter3d(sender, data):
     log_debug("Inside 3d plotting function")
     colorlist = []
@@ -48,16 +49,20 @@ def plotter3d(sender, data):
     log_debug(tickers)
     if tickers:
         sg.stockplotter(tickers,colorlist,intervalsel)
+
 def plot_clearer(sender, data):
     tickerlist.clear()
     clear_plot("StockPlot")
     maxy[0] = 0
     miny[0] = 0
+
 def close_window(sender,data):
     close_popup()
+
 def plot_callback(sender, data):
     ticker = get_value('Input Stock Ticker')
     plotfunc(ticker,0)
+
 def plotfunc(ticker,color):
     mystock = yf.Ticker(ticker)
     intervalsel = get_value("Select Plotting Interval")
