@@ -1,12 +1,9 @@
-from dearpygui.dearpygui import *
+from dearpygui.core import *
+from dearpygui.simple import *
 from math import cos, sin
 import yfinance as yf
 import stockgraph3d as sg
 #TODO
-#stop ability to replot a stock, looks confusing
-#figure out how the plotting is being done and if ticker in tickerlist dont plot
-#easy to stop replotting but removes ability to change color of stock which is a nice feature,
-#if that is removed should make a new dialouge where user can change color of a certain stock
 #improve gui look make some things on the same line to not leave as much blank space on the right
 #try using pyautogui to plot a large number of stocks to test the limits
 #use a random generator to make a random hex color to plot and then just keep typing and plotting a large list 
@@ -14,22 +11,6 @@ import stockgraph3d as sg
 #z is price/percent change
 #y is which number of stock
 #add a textbox to search a stock ticker and generate a graph of price
-set_theme("Dark Grey")
-set_main_window_title("ZoomBerg Terminal")
-add_input_text("Input Stock Ticker", default_value="msft",width = 100)
-add_spacing(count=4)
-add_color_picker3("Choose Color Of Stock",width=100)
-add_button("Plot stock history", callback="plot_callback")
-add_button("Clear plot", callback="plot_clearer")
-add_button("Plot in 3d", callback="plotter3d")
-add_combo("Select Plotting Interval",['7d','1mo','1y'],width = 100, default_value = '7d', callback = "changedinterval")
-add_button("Open logger", callback="openlogger")
-add_same_line()
-add_button("Open dearpygui documentation", callback="opendocs")
-add_plot("StockPlot", "Time Interval", f"Increase from Start of Time Interval (%)", height=-1)
-add_data("maxy", 0)
-add_data("miny", 0)
-
 #possibly change to regraph all current tickers for the new interval
 def changedinterval(sender,data):
     clear_plot("StockPlot")
@@ -83,6 +64,8 @@ def plotfunc(ticker,color):
     elif intervalsel == '1y':
         stockmovement = mystock.history('1y')
     if stockmovement.empty:
+        print("tickererror")
+        '''
         if does_item_exist("Ticker Error"):
             set_theme("Red")
             show_item("Ticker Error")
@@ -93,6 +76,7 @@ def plotfunc(ticker,color):
             add_text("Invalid Ticker")
             add_button("Ok", callback="close_window")
             end_window()
+        '''
     elif color != 0 or ticker not in tickerlist:
         if color == 0:
             newcolor = get_value("Choose Color Of Stock")
@@ -128,7 +112,9 @@ def plotfunc(ticker,color):
         else:
             for i in range(len(intervaldata)):
                 datalist.append((i,(intervaldata[i]-firstprice)*100/firstprice))
-        add_line_series("StockPlot", ticker.upper(), datalist, weight=2, fill=[newcolor[0],newcolor[1],newcolor[2], 100])
+        x = [x for x,y in datalist]
+        y = [y for x,y in datalist]
+        add_line_series("StockPlot", ticker.upper(), x,y, weight=2, color=[newcolor[0],newcolor[1],newcolor[2], 100])
     else:
         #if you are replotting a stock. perhaps check its color if different from that in the tickerlist
         #if it is different replace the color with the new color and then clear and replot the graph
@@ -140,4 +126,23 @@ def plotfunc(ticker,color):
 tickerlist = {}
 maxy = [0]
 miny = [0]
-start_dearpygui()
+
+with window("ZoomBerg Terminal"):
+    set_theme("Dark Grey")
+    set_main_window_title("ZoomBerg Terminal")
+    add_input_text("Input Stock Ticker", default_value="msft",width = 100)
+    add_spacing(count=4)
+    add_color_picker3("Choose Color Of Stock",width=100)
+    add_button("Plot stock history", callback=plot_callback)
+    add_button("Clear plot", callback=plot_clearer)
+    add_button("Plot in 3d", callback=plotter3d)
+    add_combo("Select Plotting Interval",items=['7d','1mo','1y'],width = 100, default_value = '7d', callback = changedinterval)
+    add_button("Open logger", callback=openlogger)
+    add_same_line()
+    add_button("Open dearpygui documentation", callback=opendocs)
+    add_plot("StockPlot")
+    add_data("maxy", 0)
+    add_data("miny", 0)
+
+
+start_dearpygui(primary_window="ZoomBerg Terminal")

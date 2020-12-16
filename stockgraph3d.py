@@ -78,8 +78,9 @@ def stockplotter(tickerlist,colorlist,intervalsel):
     plt.show()
     plt.close('all')
 def main():
-    colors = [cc('r'),cc('b'),cc('c'),cc('g'),cc('m'),cc('y'),cc('k')]
-    tickerlist = ['amd','msft']
-    stockplotter(tickerlist,colors)
+    pass
+    #colors = [cc('r'),cc('b'),cc('c'),cc('g'),cc('m'),cc('y'),cc('k')]
+    #tickerlist = ['amd','msft']
+    #stockplotter(tickerlist,colors)
 if __name__ == "__main__":
     main()
